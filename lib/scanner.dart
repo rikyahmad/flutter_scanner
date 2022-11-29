@@ -97,10 +97,11 @@ class _ScannerState extends State<Scanner> {
       startCamera();
     });
     controller.scannedDataStream.listen((scanData) async {
+      debugPrint("Code : ${scanData.code}");
+      widget.onResult(scanData);
       Navigator.of(context).pop();
       await controller.stopCamera();
       controller.dispose();
-      widget.onResult(scanData);
     });
   }
 
@@ -120,6 +121,10 @@ class _ScannerState extends State<Scanner> {
   }
 
   void startCamera() async {
-    await controller?.resumeCamera();
+    try {
+      await controller?.resumeCamera();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
