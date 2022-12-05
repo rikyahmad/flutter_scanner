@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_scanner/destination.dart';
 import 'package:flutter_scanner/scanner.dart';
+import 'package:flutter_scanner/scanner_v2.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 void main() => runApp(const MaterialApp(
@@ -43,9 +45,37 @@ class _MyHomeState extends State<MyHome> {
                 child: const Text('Open Scanner'),
               ),
             ),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  openScannerV2();
+                },
+                child: const Text('Open Scanner v2'),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void openScannerV2() async {
+    final resultV2 = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) =>
+          const ScannerV2(title: "Scan QR Code", subTitle: "Material Receive"),
+    ));
+
+    if (resultV2 is Barcode) {
+      openDestination(resultV2);
+    }
+  }
+
+  void openDestination(Barcode resultV2) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => Destination(
+        result: resultV2,
+      ),
+    ));
   }
 }
